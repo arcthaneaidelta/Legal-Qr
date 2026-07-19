@@ -1,6 +1,6 @@
 [build]
   command = "pnpm install && pnpm run build"
-  publish = "artifacts/legacyqr/dist"
+  publish = "artifacts/legacyqr/dist/public"
 
 [build.environment]
   NODE_VERSION = "20"
