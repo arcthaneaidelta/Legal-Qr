@@ -1,0 +1,307 @@
+LegacyQR — Demo Prototype Build Brief
+
+For: Freelance bid presentation (M Akram) · For AI build tool: Replit / Antigravity
+
+
+0. What this document is
+
+This is a front-end-only, click-through demo built to win a client pitch — it is not the production MVP described in the client's job post. Everything is hard-coded/mocked. No real backend, no real auth, no real payments, no real database, no real email sending.
+
+Goal: the client clicks through every screen, believes it's real, and feels the finished product in their hands before they've hired anyone.
+
+Once the bid is won, the actual MVP gets rebuilt properly on Firebase/Supabase per the original job spec — that is a separate, later project.
+
+
+1. Design direction (read this before building anything)
+
+Theme name: "Evergreen & Ember."
+
+Reasoning, not vibes: this is a memorial product. The two AI-design clichés to actively avoid are (a) warm cream background + high-contrast serif + terracotta/clay accent, and (b) near-black background + a single acid-green or neon accent. Both are everywhere right now and will make this look like every other AI-generated site. Instead:
+
+
+Evergreen (deep pine/teal) = the plant most associated with cemeteries and remembrance — "life that stays green." It's the primary color, used with restraint.
+Ember (warm muted gold/amber) = candlelight, a memory kept warm. Used sparingly, only for the moments that matter — a primary CTA, the QR glow, a hover highlight.
+Backgrounds lean toward a cool pale stone/sage, not the ubiquitous warm cream. In dark mode, background is a deep charcoal with a green-blue undertone, not pure black.
+
+
+Signature element (the one thing this design should be remembered by):
+A QR code is a grid of small square modules. Treat those modules as the site's visual DNA — as tiny points of light. On the loading screen, in the hero backdrop, and in a couple of key hover states, these modules drift slowly like distant embers/stars, and at key moments they assemble into an actual scannable-looking QR pattern, then softly dissolve again. This is the one "wow" motion moment — everything else on the site stays calm and disciplined so this doesn't get lost in noise.
+
+Do not add extra decorative effects beyond what's specified below (no glassmorphism, no gradient blobs, no confetti, no neon glows). Restraint is what makes it read as premium instead of AI-generated.
+
+
+2. Tech stack (for Replit/Antigravity to use)
+
+
+React + Vite
+Tailwind CSS for styling, using CSS variables for all color tokens (so dark/light mode is a variable swap, not duplicated styles)
+Framer Motion for all animation (scroll reveals, hover states, page transitions)
+React Router for page navigation
+lucide-react for icons
+qrcode.react (or equivalent) to generate a real, functional QR code — see Section 8, this matters
+Google Fonts: Fraunces, Public Sans, IBM Plex Mono (see Section 3)
+All data lives in local component state / a mock JSON file. No API calls, no backend, no environment secrets.
+Deploy so there's a single live shareable URL.
+
+
+
+3. Design system
+
+3.1 Color tokens
+
+Light mode — "Parchment Stone"
+
+TokenHexUse--bg#EEF0EAPage background — pale cool sage-stone, not cream--surface#FBFBF8Cards, panels--text-primary#22272AHeadlines, body--text-secondary#5B615DCaptions, meta--accent-primary#2F4F49Deep pine/teal — buttons, links, icons--accent-ember#B8763AWarm gold — sparingly: primary CTA glow, QR accent, hover highlight--border#DCDED4Dividers, card borders--success#5E8C6AConfirmation states (muted moss, not neon green)--error#B5654AError states (muted terracotta-red, not harsh red)
+
+Dark mode — "Ember Dusk"
+
+TokenHexUse--bg#14181APage background — deep charcoal, green-blue undertone--surface#1B2124Cards, panels--text-primary#EDEFEAHeadlines, body--text-secondary#9CA39DCaptions, meta--accent-primary#6E9C90Lightened pine/teal for contrast--accent-ember#D6A15CWarm gold, same sparing use--border#262B2EDividers--success#7CA987--error#C97C61
+
+Toggle: sun/flame ↔ moon icon in the nav. Respect the visitor's system preference (prefers-color-scheme) on first load, then remember their manual choice (localStorage). Cross-fade the whole theme transition over ~250ms — never a hard flash.
+
+3.2 Typography
+
+RoleFontNotesDisplay (names, big headlines)Fraunces (variable, use soft optical size)Warm, slightly irregular serif — evokes an engraved plaque without being a wedding-invitation cliché. Use in restraint: hero headline, memorial name display, section titles only.BodyPublic SansClean, humanist, highly legible for long biography textUtility / dataIBM Plex MonoSmall caps/uppercase for labels like order IDs, dates, timestamps in the admin panel — a quiet nod to the "code/data" side of the product
+
+Type scale (desktop): Hero H1 clamp(2.75rem, 5vw, 4.5rem), Section H2 2.25rem, H3 1.5rem, Body 1.0625rem, Caption 0.875rem. Line height 1.15 for display, 1.6 for body.
+
+3.3 Layout & spacing
+
+8px base spacing unit. Max content width 1200px, generous side padding (24px mobile, 64–96px desktop). Card corner radius: 12px (soft, not pill-shaped, not sharp — dignified, not playful).
+
+3.4 Structural devices
+
+Only use numbered steps (01/02/03) where there's a real sequence — the "How It Works" section genuinely is one, so number it. Don't add numbering elsewhere just for decoration.
+
+
+4. Global components
+
+4.1 Loading / splash screen
+
+
+Full-bleed background in --bg.
+Center: small QR-module dots (16–24 of them) scattered and dim, drifting very slowly.
+Over ~1.2s they brighten and animate into position, assembling into a simplified LegacyQR mark (a small QR-like glyph or the wordmark built from modules).
+A thin, minimal progress line beneath (not a spinner) in --accent-ember.
+Total duration: 1.5–2.2s max, then cross-fade into the landing hero. Must be skippable (click/tap anywhere skips it) — never trap the client.
+Respect prefers-reduced-motion: skip straight to a simple fade if set.
+
+
+4.2 Navigation header
+
+
+Sticky top bar, transparent over the hero, becomes solid --surface with a soft shadow after ~80px scroll (smooth transition, not a snap).
+Left: wordmark. Center/right: Home · How It Works · Sample Memorial · Pricing · Admin Demo (labeled "Demo" badge since it's not customer-facing in production). Right-most: dark/light toggle, then a primary CTA button "Preview a Life Story."
+Mobile: collapses to a hamburger that slides in a full-height panel from the right, links stagger in (40ms apart) as it opens.
+Underline-grow-from-center hover effect on nav links (200ms ease).
+
+
+4.3 Footer
+
+Four columns on desktop, stacked on mobile:
+
+
+Brand — wordmark + one-line description + the QR-module motif as a small quiet decorative element.
+Explore — links to each demo page.
+Contact — a simple contact form (Name, Email, Message, Send button) with real front-end states: focus rings, inline validation messages, a "Message sent" success state on click (no actual email is sent — just show the success UI, since this is a demo).
+Stay updated — a newsletter email input + button (front-end only, shows a success state on click).
+
+
+Bottom legal bar (full width, below the four columns, on its own thin divider):
+
+© 2026 LegacyQR. All rights reserved. M Akram
+
+This must fully replace any Replit-injected footer, watermark, or "Powered by Replit" badge. No Replit branding should appear anywhere on the page — instruct the build tool explicitly to remove/suppress it.
+
+4.4 Buttons
+
+
+Primary: solid --accent-primary background, --surface text. Hover: scale to 1.02, background shifts slightly toward --accent-ember at the edges (a soft glow, not a hard color swap), 220ms ease-out.
+On click: quick scale-down to 0.97 then spring back, plus a soft radial pulse in --accent-ember expanding from the click point and fading over 400ms (this is the one "click effect" on the site — don't add ripples to every element or it stops feeling premium).
+Secondary: outline style, fills in softly on hover.
+Disabled states: 40% opacity, no hover response.
+Every interactive element needs a visible keyboard focus ring (accessibility floor, not optional).
+
+
+4.5 Cards
+
+Soft shadow at rest, lifts (translateY -4px) with a slightly stronger shadow on hover, 200ms ease. No color change on card hover — keep it about elevation, not paint.
+
+
+5. Motion & interaction rules
+
+
+Scroll reveal: elements fade up 16px + fade in opacity as they enter viewport (IntersectionObserver, not scroll listeners). Stagger children (cards, list items) by 80–100ms.
+Hero parallax: background QR-module field drifts at ~15% of scroll speed relative to foreground text — subtle, not seasick.
+Page transitions: 200–250ms fade + 8px slide between routes (Framer Motion AnimatePresence).
+Magnetic CTA (desktop only): the single primary hero button can pull very slightly (max 6px) toward the cursor when nearby — a nice premium touch, but disable entirely on touch devices, and don't apply it to any other button.
+Performance rule, non-negotiable: only animate transform and opacity. Never animate width, height, top, left, or box-shadow color on scroll-frequency events. Target 60fps on a mid-range phone, not just on a dev laptop.
+Respect prefers-reduced-motion: reduce globally — fall back to simple fades, no parallax, no drifting particles.
+
+
+
+6. Live background for the hero ("the video-y thing")
+
+Rather than a literal video file (heavy, breaks mobile performance, and needs footage you may not have), build this as a lightweight animated canvas/SVG layer:
+
+
+40–60 small square "modules" (the QR motif) at low opacity, drifting slowly in random slow paths, gently pulsing brightness like embers.
+Occasionally (every 8–12s), a handful nearby briefly align into a tiny QR-like cluster before dispersing again — a subtle "hint" of the product's core object living in the background.
+This should read as alive and premium without ever distracting from the headline text in front of it (keep opacity low, ~8–15%).
+If you later obtain real short looped footage (candlelight, soft drifting light, misty morning at a garden/memorial setting), it can replace this layer — spec: muted, autoplay, loop, playsinline, under 4MB, with this canvas effect as the automatic fallback on mobile/low-power devices to protect performance and data usage.
+
+
+
+7. Sitemap
+
+#PagePurpose1Loading screenFirst-impression brand moment2Landing pageThe pitch — what it is, how it works, proof, CTA3Sign up / Log inDemo-only auth UI4"My Life Stories" dashboardLogged-in user's profile list (mock)5Create a Life Story (4-step wizard)Profile creation flow6CheckoutPayment UI (mock)7Public Memorial page ("Life Story")The actual product — what a visitor sees after scanning8QR Result pagePost-purchase QR delivery + print guidance9Admin dashboardOrder list + QR downloads (mock data)
+
+
+8. Page-by-page spec
+
+8.1 Landing page
+
+Hero — split layout on desktop (stacks on mobile):
+
+
+Left: eyebrow label "A digital memorial platform," H1 "Their story, kept alive" (or similar — write 2–3 alternates and pick the strongest), one supporting sentence, primary CTA "Preview a Life Story," secondary link "See how it works ↓."
+Right: a framed device/plaque mockup showing a live, gently auto-scrolling preview of the actual sample memorial page (see 8.7) — this is a "show, don't tell" hero: the product is visibly demonstrating itself, not a stock photo.
+Background: the ember/QR-module canvas from Section 6, low opacity, parallax.
+
+
+How It Works (numbered 01–04, this is a real sequence so numbering is correct):
+
+
+Create a profile — add photos, a life story, key dates
+We generate a unique QR code for that page
+Print it on a weatherproof sticker or plaque
+Visitors scan it at the memorial to read and remember
+
+
+Each step: small icon, short label, one line of copy. Reveal on scroll, staggered.
+
+Sample Memorial preview (larger showcase) — a bigger, static-but-interactive card version of the memorial page (click through to the full page at 8.7).
+
+Why families choose LegacyQR — 3–4 benefit cards (durability of the plaque, ease of visiting family updating it, privacy controls, affordability). Skip fabricated named testimonials with fake photos — for a pre-launch product, invented specific endorsers can read as deceptive even in a demo. Instead use short, unattributed illustrative lines clearly framed as "how families use it," e.g., a soft card labeled "Illustrative example" with a short quote and just "— a family reflecting on a parent's life," no invented full name/photo.
+
+Pricing — 1–2 simple illustrative tiers (e.g., "Single Life Story" one-time price, "Family Plan" for multiple profiles). Clearly workable as a placeholder; note in a code comment that real pricing needs confirmation from the client before launch.
+
+FAQ — accordion, 4–5 real questions (durability outdoors, editing after purchase, privacy/who can see the page, what happens if the plaque is damaged).
+
+Final CTA band — full-width, --accent-primary background, "Start their story today" + button.
+
+Footer — per Section 4.3.
+
+8.2 Sign up / Log in
+
+Simple centered card, email + password fields, clear focus states, a "Continue" button that just routes into the dashboard (no real auth). Toggle link between sign up and log in. Include a "Continue as guest — view demo" link so the client can skip straight in without typing anything.
+
+8.3 "My Life Stories" dashboard
+
+A simple grid of profile cards (2–3 mock entries: photo, name, dates, status badge "Live" / "Draft"), each with "View Memorial Page" and "Edit" actions, plus a prominent "+ Create a new Life Story" card that starts the wizard.
+
+8.4 Create a Life Story — 4-step wizard
+
+Step indicator across the top (numbered, since this is a real sequence).
+
+
+Basic info — name, birth date, passing date, relationship/title, short tagline
+Photos — drag-and-drop upload area (accepts files, just previews them client-side, nothing uploaded anywhere), reorderable thumbnail grid
+Their story — a rich-ish text area for biography, plus optional "Milestones" mini-timeline entries (year + short note)
+Preview & confirm — renders the actual memorial page live from what was entered, "Looks good → Continue to checkout" button
+
+
+Each step: smooth slide transition to the next, a persistent "Back" link, autosave feel (no real save, just keep state in memory as they move between steps).
+
+8.5 Checkout (mock)
+
+Order summary card (plan chosen, price) + a card-details form styled like a real payment form (card number, expiry, CVC — all client-side only, clearly decorative, never actually processes anything) + "Complete purchase" button that shows a success animation and routes to the QR result page.
+
+8.6 QR Result page
+
+
+Large, celebratory but tasteful confirmation ("Their Life Story is live").
+The actual generated QR code, rendered with a real QR library and encoding the live URL of the sample memorial page from this same deployed demo — so during the pitch, the client can scan it with their phone and land on the real memorial page. This is the single most persuasive live moment in the whole demo; don't skip it.
+Download buttons (PNG / SVG — can be non-functional in the demo, styled realistically).
+A short "How to print this" guidance card (weatherproof sticker vs. engraved plaque options, recommended size).
+Note: "A copy has also been sent to your email" (decorative only — no email is actually sent).
+
+
+8.7 Public Memorial ("Life Story") page
+
+This is the emotional core of the product — design it with restraint and warmth, not gimmicks.
+
+
+Hero: a soft full-width cover photo, name in Fraunces display type, birth–passing dates, a one-line tagline.
+Biography section in Public Sans, generous line height, comfortable reading width (max ~680px).
+Photo gallery — a clean grid, lightbox on click.
+Optional milestones/timeline if entered in the wizard.
+A quiet "Share this page" button (copies link) — no aggressive social buttons.
+No login required to view — this page must feel public and immediately accessible, since visitors will land here straight from scanning a plaque outdoors on their phone.
+Use fictional placeholder content only — a made-up name (e.g., a composite, not any real identifiable person) and tasteful royalty-free/generic placeholder imagery. Never use a real deceased individual's name or photo in demo content.
+
+
+8.8 Admin dashboard
+
+
+Top stat row: 3 cards — Total Orders, Total Revenue, Live Profiles (mock numbers).
+Orders table: columns Order ID (IBM Plex Mono), Customer, Profile Name, Date, Status (badge: Paid / Pending), QR (a small "Download" icon button), Actions (View).
+Search bar + status filter above the table.
+6–8 mock rows is enough to look real without feeling like a spreadsheet dump.
+Clicking a row opens/links to that profile's memorial page and its QR result page.
+No real login gate needed for the demo — just make this reachable via a nav link, clearly labeled "Admin Demo."
+
+
+
+9. Responsiveness
+
+Breakpoints: mobile <640px, tablet 640–1024px, desktop >1024px. Test on actual iOS Safari and Android Chrome, not just a resized browser window. Minimum tap target 44×44px. On mobile: hero stacks (headline/CTA first, device mockup below), nav collapses to the slide-in panel, magnetic-cursor and parallax effects are disabled (not just slowed), background particle count drops to reduce GPU load.
+
+
+10. Performance checklist
+
+
+Only transform/opacity animated on scroll-frequency interactions
+Images lazy-loaded below the fold, served in modern formats, sized appropriately
+prefers-reduced-motion respected everywhere
+No blocking web fonts — use font-display: swap
+Test actual frame rate with Chrome DevTools' rendering panel on a throttled 4x CPU profile before calling it done
+Route-level code splitting so the initial load (loading screen → hero) is fast
+
+
+
+11. Explicitly out of scope for this demo
+
+
+No real user authentication or password storage
+No real payment processing (no live Stripe/PayPal keys)
+No real database — all data is hard-coded/local state
+No real email sending
+No real photo storage/upload to a server — previews are client-side only
+No admin login gate
+These all belong to the real MVP build phase, after the client hires you, per the original job spec (Firebase/Supabase, real accounts, real Stripe integration, etc.)
+
+
+
+12. Build priority order (in case time runs short)
+
+
+Loading screen (QR-module assembly)
+Landing page hero with live mini memorial preview + ember background
+Public Memorial page (full, real-feeling content)
+QR Result page with a real, working QR code pointing to the live demo memorial URL
+How It Works + rest of landing page sections
+Create a Life Story wizard (all 4 steps clickable)
+Admin dashboard with mock orders
+Checkout + sign up/login screens
+Dark/light toggle across all pages
+Full mobile responsiveness pass
+Footer with contact form + the required legal line, Replit branding fully removed
+
+
+
+13. Footer legal line — exact instruction to give the build tool
+
+
+Remove any default Replit branding, watermark, or "Powered by Replit" badge from the page. At the very bottom of the footer, on its own line, display exactly:
+© 2026 LegacyQR. All rights reserved. M Akram

@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "LegacyQR Demo"
+version = "1.0.0"
+id = "artifacts/legacyqr"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25384
+
+[services.development]
+run = "pnpm --filter @workspace/legacyqr run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/legacyqr", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/legacyqr/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25384"
+BASE_PATH = "/"
