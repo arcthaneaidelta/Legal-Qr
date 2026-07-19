@@ -2,6 +2,9 @@
   command = "npm i -g pnpm && pnpm install && pnpm run build"
   publish = "artifacts/legacyqr/dist"
 
+[build.environment]
+  NODE_VERSION = "20"
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
