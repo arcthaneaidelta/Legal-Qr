@@ -4,6 +4,12 @@ import { mockProfiles } from '@/lib/mockData';
 import { Plus, Settings, QrCode } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+const PROFILE_COVERS: Record<string, string> = {
+  'LQ-2024-001': 'https://images.unsplash.com/photo-1464820453369-31d2c0b651af?w=600&h=256&fit=crop&q=80', // Eleanor — roses
+  'LQ-2024-002': 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?w=600&h=256&fit=crop&q=80', // George — jazz/vintage
+  'LQ-2024-003': 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&h=256&fit=crop&q=80', // Rose — cottage garden
+};
+
 export default function Dashboard() {
   return (
     <div className="w-full flex flex-col bg-bg min-h-[80vh]">
@@ -29,7 +35,12 @@ export default function Dashboard() {
               transition={{ delay: i * 0.1 }}
               className="legacy-card overflow-hidden flex flex-col h-full"
             >
-              <div className="h-32 bg-gradient-to-br from-accent-primary/10 to-accent-ember/10 relative">
+              <div className="h-32 relative overflow-hidden bg-accent-primary/10">
+                <img
+                  src={PROFILE_COVERS[profile.id] ?? PROFILE_COVERS['eleanor-whitfield']}
+                  alt=""
+                  className="w-full h-full object-cover"
+                />
                 <div className="absolute top-4 right-4 bg-surface/80 backdrop-blur-sm border border-border-subtle rounded-full px-3 py-1 flex items-center gap-2">
                   <div className={`w-2 h-2 rounded-full ${profile.status === 'Live' ? 'bg-success' : 'bg-accent-ember'}`} />
                   <span className="text-xs font-medium text-text-primary">{profile.status}</span>

@@ -17,14 +17,14 @@ export default function MemorialPage() {
     });
   };
 
-  // Generate placeholder gradient images for the gallery
+  // Gallery images — real photos fitting Eleanor's story (Cornwall, roses, books, baking, watercolours, family)
   const galleryImages = [
-    'linear-gradient(120deg, #2F4F49, #5E8C6A)',
-    'linear-gradient(45deg, #B8763A, #D6A15C)',
-    'linear-gradient(to bottom, #728A81, #A3B5AE)',
-    'linear-gradient(135deg, #5B615D, #8C938E)',
-    'linear-gradient(60deg, #D6A15C, #F3D9B5)',
-    'linear-gradient(to right, #2F4F49, #1C302C)'
+    { src: 'https://images.unsplash.com/photo-1490750967868-88df5691cc51?w=600&h=600&fit=crop&q=80', caption: 'Her rose garden, Edinburgh' },
+    { src: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&h=600&fit=crop&q=80', caption: 'A lifelong reader' },
+    { src: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&h=600&fit=crop&q=80', caption: 'Summers in Cornwall' },
+    { src: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=600&fit=crop&q=80', caption: 'Her famous scones' },
+    { src: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&h=600&fit=crop&q=80', caption: 'Watercolour afternoons' },
+    { src: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&h=600&fit=crop&q=80', caption: 'The cottage garden' },
   ];
 
   return (
@@ -52,9 +52,12 @@ export default function MemorialPage() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="text-center mb-16"
         >
-          <div className="w-32 h-32 md:w-40 md:h-40 rounded-full border-8 border-surface bg-bg shadow-sm mx-auto mb-6 flex items-center justify-center overflow-hidden">
-             {/* Placeholder for real portrait */}
-             <div className="w-full h-full bg-gradient-to-tr from-accent-primary/20 to-accent-ember/20" />
+          <div className="w-32 h-32 md:w-40 md:h-40 rounded-full border-8 border-surface shadow-md mx-auto mb-6 overflow-hidden">
+             <img
+               src="https://images.unsplash.com/photo-1566616213894-2d4e1baee5d8?w=320&h=320&fit=crop&q=85"
+               alt="Eleanor Margaret Whitfield"
+               className="w-full h-full object-cover"
+             />
           </div>
           
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-text-primary mb-4 leading-tight">
@@ -131,14 +134,18 @@ export default function MemorialPage() {
         >
           <h2 className="text-center font-serif text-2xl text-text-primary mb-12">Gallery</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
-            {galleryImages.map((grad, i) => (
+            {galleryImages.map((img, i) => (
               <motion.div 
                 key={i}
                 whileHover={{ scale: 1.02 }}
-                className="aspect-square rounded-sm overflow-hidden cursor-pointer"
-                style={{ background: grad }}
-                onClick={() => setLightboxImg(grad)}
-              />
+                className="aspect-square rounded-sm overflow-hidden cursor-pointer relative group"
+                onClick={() => setLightboxImg(img.src)}
+              >
+                <img src={img.src} alt={img.caption} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-end">
+                  <p className="text-white text-xs px-3 pb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-sans">{img.caption}</p>
+                </div>
+              </motion.div>
             ))}
           </div>
         </motion.section>
@@ -163,8 +170,9 @@ export default function MemorialPage() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               className="w-full max-w-3xl aspect-square md:aspect-video rounded-lg shadow-2xl overflow-hidden"
-              style={{ background: lightboxImg }}
-            />
+            >
+              <img src={lightboxImg} alt="" className="w-full h-full object-cover" />
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

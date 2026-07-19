@@ -13,8 +13,14 @@ const PROFILES = [
     tagline: 'Devoted mother, avid reader,\nmaker of perfect scones',
     accentFrom: 'from-[#4C7764]/30',
     accentTo: 'to-[#C46E3C]/20',
-    photoColor: 'bg-[#4C7764]/40',
-    blocks: ['bg-[#4C7764]/20', 'bg-[#C46E3C]/15', 'bg-[#4C7764]/25', 'bg-[#4C7764]/15'],
+    photo: 'https://images.unsplash.com/photo-1566616213894-2d4e1baee5d8?w=200&h=200&fit=crop&q=80',
+    coverPhoto: 'https://images.unsplash.com/photo-1464820453369-31d2c0b651af?w=400&h=200&fit=crop&q=80',
+    gridPhotos: [
+      'https://images.unsplash.com/photo-1464820453369-31d2c0b651af?w=150&h=150&fit=crop&q=70',
+      'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=150&h=150&fit=crop&q=70',
+      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=150&h=150&fit=crop&q=70',
+      'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=150&h=150&fit=crop&q=70',
+    ],
   },
   {
     name: 'George R. Harrison',
@@ -22,8 +28,14 @@ const PROFILES = [
     tagline: 'Engineer, jazz lover,\ngrandfather extraordinaire',
     accentFrom: 'from-[#C46E3C]/30',
     accentTo: 'to-[#4C7764]/20',
-    photoColor: 'bg-[#C46E3C]/40',
-    blocks: ['bg-[#C46E3C]/20', 'bg-[#4C7764]/15', 'bg-[#C46E3C]/25', 'bg-[#C46E3C]/15'],
+    photo: 'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=200&h=200&fit=crop&q=80',
+    coverPhoto: 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?w=400&h=200&fit=crop&q=80',
+    gridPhotos: [
+      'https://images.unsplash.com/photo-1511192336575-5a79af67a629?w=150&h=150&fit=crop&q=70',
+      'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=150&h=150&fit=crop&q=70',
+      'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=150&h=150&fit=crop&q=70',
+      'https://images.unsplash.com/photo-1473163928189-364b2c4e1135?w=150&h=150&fit=crop&q=70',
+    ],
   },
   {
     name: 'Rose A. Pemberton',
@@ -31,8 +43,14 @@ const PROFILES = [
     tagline: 'Teacher, gardener,\nheart of the neighbourhood',
     accentFrom: 'from-[#8B7355]/30',
     accentTo: 'to-[#4C7764]/20',
-    photoColor: 'bg-[#8B7355]/40',
-    blocks: ['bg-[#8B7355]/20', 'bg-[#4C7764]/15', 'bg-[#8B7355]/25', 'bg-[#8B7355]/15'],
+    photo: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&q=80',
+    coverPhoto: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=200&fit=crop&q=80',
+    gridPhotos: [
+      'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=150&h=150&fit=crop&q=70',
+      'https://images.unsplash.com/photo-1490750967868-88df5691cc51?w=150&h=150&fit=crop&q=70',
+      'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=150&h=150&fit=crop&q=70',
+      'https://images.unsplash.com/photo-1455734729978-db1ae4f687fc?w=150&h=150&fit=crop&q=70',
+    ],
   },
 ];
 
@@ -77,16 +95,18 @@ function CyclingPhone() {
             transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
             className="absolute inset-0 flex flex-col"
           >
-            {/* Hero gradient */}
-            <div className={`h-40 bg-gradient-to-br ${profile.accentFrom} ${profile.accentTo} relative flex-shrink-0`}>
-              <div className="absolute inset-0 opacity-20"
-                style={{ backgroundImage: 'radial-gradient(circle at 30% 70%, rgba(255,255,255,0.1) 0%, transparent 60%)' }} />
+            {/* Hero cover photo */}
+            <div className="h-40 relative flex-shrink-0 overflow-hidden">
+              <img src={profile.coverPhoto} alt="" className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-black/30" />
             </div>
 
             {/* Content */}
             <div className="flex-1 px-5 pb-6 -mt-12 flex flex-col items-center text-center overflow-hidden">
               {/* Avatar */}
-              <div className={`w-20 h-20 rounded-full border-2 border-white/10 ${profile.photoColor} mb-3 shadow-lg flex-shrink-0`} />
+              <div className="w-20 h-20 rounded-full border-2 border-white/20 mb-3 shadow-lg flex-shrink-0 overflow-hidden bg-white/10">
+                <img src={profile.photo} alt={profile.name} className="w-full h-full object-cover" />
+              </div>
 
               {/* Name */}
               <h3
@@ -108,18 +128,12 @@ function CyclingPhone() {
                 {profile.tagline}
               </p>
 
-              {/* Skeleton text lines */}
-              <div className="w-full flex flex-col gap-1.5 mb-4 flex-shrink-0">
-                <div className="h-1.5 w-full rounded-full bg-white/8" />
-                <div className="h-1.5 w-5/6 rounded-full bg-white/6" />
-                <div className="h-1.5 w-4/5 rounded-full bg-white/8" />
-                <div className="h-1.5 w-3/4 rounded-full bg-white/5" />
-              </div>
-
               {/* Photo grid */}
-              <div className="grid grid-cols-2 gap-1.5 w-full">
-                {profile.blocks.map((cls, i) => (
-                  <div key={i} className={`aspect-square rounded ${cls} border border-white/5`} />
+              <div className="grid grid-cols-2 gap-1.5 w-full mt-2">
+                {profile.gridPhotos.map((src, i) => (
+                  <div key={i} className="aspect-square rounded overflow-hidden">
+                    <img src={src} alt="" className="w-full h-full object-cover opacity-80" />
+                  </div>
                 ))}
               </div>
             </div>
